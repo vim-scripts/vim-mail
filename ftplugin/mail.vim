@@ -3,7 +3,7 @@
 " Author:      David Beniamine <David@Beniamine.net>
 " License:     Vim license
 " Website:     http://github.com/dbeniamine/vim-mail.vim
-" Version:     0.2
+" Version:     0.2.1
 
 "Don't load twice
 if exists("g:loaded_VimMail")
@@ -20,7 +20,12 @@ set cpo&vim
 
 " Go at the end of the headers
 if(!exists("g:VimMailStartOnTop"))
-    au BufWinEnter *mutt-* call VimMailGoto('^$')
+    au BufWinEnter *mutt-* call VimMailGoto('^$','I')
+endif
+
+" Set fold method
+if(!exists("g:VimMailDoNotFold"))
+    setlocal foldexpr=VimMaiFoldLevel() foldmethod=expr
 endif
 
 "
@@ -34,48 +39,57 @@ endif
 
 " Go to different parts of the mail
 if !hasmapto("<LocalLeader>f","n")
-    map <LocalLeader>f :call VimMailGoto('^From') <CR>
+    map <LocalLeader>f :call VimMailGoto('^From','A') <CR>
 endif
 
 if !hasmapto("<LocalLeader>b","n")
-    map <LocalLeader>b :call VimMailGoto('^Bcc') <CR>
+    map <LocalLeader>b :call VimMailGoto('^Bcc','A') <CR>
 endif
 
 if !hasmapto("<LocalLeader>c","n")
-    map <LocalLeader>c :call VimMailGoto('^Cc') <CR>
+    map <LocalLeader>c :call VimMailGoto('^Cc','A') <CR>
 endif
 
 if !hasmapto("<LocalLeader>s","n")
-    map <LocalLeader>s :call VimMailGoto('^Subject') <CR>
+    map <LocalLeader>s :call VimMailGoto('^Subject','A') <CR>
 endif
 
 if !hasmapto("<LocalLeader>R","n")
-    map <LocalLeader>R :call VimMailGoto('^Reply-To') <CR>
+    map <LocalLeader>R :call VimMailGoto('^Reply-To','A') <CR>
 endif
 
 if !hasmapto("<LocalLeader>t","n")
-    map <LocalLeader>t :call VimMailGoto('^To') <CR>
+    map <LocalLeader>t :call VimMailGoto('^To','A') <CR>
 endif
 
 if !hasmapto("<LocalLeader>r","n")
-    map <LocalLeader>r :call VimMailGoto('^>') <CR>
+    map <LocalLeader>r :call VimMailGoto('^>','I') <CR>
 endif
 
 if !hasmapto("<LocalLeader>r2","n")
-    map <LocalLeader>r2 :call VimMailGoto('^>\s*>') <CR>
+    map <LocalLeader>r2 :call VimMailGoto('^>\s*>','I') <CR>
 endif
 
 if !hasmapto("<LocalLeader>r3","n")
-    map <LocalLeader>r3 :call VimMailGoto('^>\s*>\s*>') <CR>
+    map <LocalLeader>r3 :call VimMailGoto('^>\s*>\s*>','I') <CR>
 endif
 
 if !hasmapto("<LocalLeader>r4","n")
-    map <LocalLeader>r4 :call VimMailGoto('^>\s*>\s*>\s*>') <CR>
+    map <LocalLeader>r4 :call VimMailGoto('^>\s*>\s*>\s*>','I') <CR>
 endif
 
 if !hasmapto("<LocalLeader>S", "n")
-    map <LocalLeader>S :call VimMailGoto('^-- ') <CR>
+    map <LocalLeader>S :call VimMailGoto('^-- ','j') <CR>
 endif
+
+if !hasmapto("<LocalLeader>B", "n")
+    map <LocalLeader>B :call VimMailGoto('^$','I') <CR>
+endif
+
+if !hasmapto("<LocalLeader>E", "n")
+    map <LocalLeader>E :call VimMailGoto('^>','Nj') <CR>
+endif
+
 
 " pc_query completion
 if(!exists("g:VimMailDontUseComplete"))
@@ -162,11 +176,21 @@ function! CompleteAddr(findstart, base)
 endfunction
 
 " Go to a part of the message
-function! VimMailGoto(pattern)
+function! VimMailGoto(pattern,post)
     normal gg
     execute "/".a:pattern
-    normal A
+    execute "normal ".a:post
 endfunction;
+
+" Fold Method
+function! VimMaiFoldLevel()
+    let l:line = matchstr(getline(v:lnum),'^>[> ]*')
+    if !empty(l:line)
+        return len(substitute(l:line,' ',"","g"))
+    else
+        return 0
+    endif
+endfunction
 
 " Restore context
 let &cpo = s:save_cpo
