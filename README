@@ -1,12 +1,14 @@
 This is a mirror of http://www.vim.org/scripts/script.php?script_id=5132
 
 This plugin is a small helper for writing mail from vim, I designed it using
-mutt but it should work with other clients. I recommand to use it in
-combination with CheckAttach (https://github.com/chrisbra/CheckAttach).
+mutt but it should work with other clients. I recommend to use it in
+combination with [CheckAttach](https://github.com/chrisbra/CheckAttach).
 
-It provides the following features
+# Features
 
-Contact completion
+This plugin provides the following features
+
+## Contact completion
 
 The contact completion is designed for
 [pycarddav](https://pypi.python.org/pypi/pyCardDAV), however it is possible to
@@ -36,7 +38,7 @@ In insert mode, type:
 
 or
 
-    <C-X><C-U>
+    <C-X><C-O>
 
 It will search for the word under the cursor in your contact list.
 
@@ -51,16 +53,22 @@ To synchronise your address book, in normal mode, type:
 
     <LocalLeader>a
 
+
 If you don't want this completion you can either not use the plugin or add
 the following line to your vimrc:
 
     let g:VimMailDontUseComplete=1
 
-Redaction
+By default, the contact completion appends the query to the result list, you
+can disable this feature:
+
+    let g:VimMailDoNotAppendQueryToResults
+
+## Redaction
 
 +   **Easy spelllang switch**
 
-    While writting mails, I often need to do switch the spell lang which can be
+    While writing mails, I often need to do switch the spell lang which can be
     annoying, so this plugin provide an easy way to do it. Just type:
 
         <LocalLeader>l
@@ -83,7 +91,7 @@ Redaction
 
     If you use the edit_headers option from mutt (which I recommend), you have
     to put your cursor manually at the end of the headers before writing your
-    mail. This script will automatically put your cursor at the first empy
+    mail. This script will automatically put your cursor at the first empty
     line of the file.
 
     If you don't like that add the following to your vimrc:
@@ -99,7 +107,7 @@ Redaction
 
         let g:VimMailDoNotFold=1
 
-Quick in-mail navigation
+## Quick in-mail navigation
 
 With this plugin, you can easily navigate through the different par of the
 mail using the following commands:
@@ -161,7 +169,7 @@ mail using the following commands:
         <LocalLeader>S
 
 
-Launch mail client
+## Launch mail client
 
 One of Mutt main drawbacks is that you can't access your mailbox while
 writing mails, good news everyone, with vim-mail you can open mutt in RO

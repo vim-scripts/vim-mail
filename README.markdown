@@ -3,7 +3,7 @@
 ## What is this plugin ?
 
 This plugin is a small helper for writing mail from vim, I designed it using
-mutt but it should work with other clients. I recommand to use it in
+mutt but it should work with other clients. I recommend to use it in
 combination with [CheckAttach](https://github.com/chrisbra/CheckAttach).
 
 
@@ -13,7 +13,7 @@ combination with [CheckAttach](https://github.com/chrisbra/CheckAttach).
 
     git clone https://github.com/dbeniamine/vim-mail.git
     cd todo.txt-vim
-    cp -R * ~/.vim
+    cp -r ./* ~/.vim
 
 ### Pathogen install
 
@@ -53,7 +53,7 @@ In insert mode, type:
 
 or
 
-    <C-X><C-U>
+    <C-X><C-O>
 
 It will search for the word under the cursor in your contact list.
 
@@ -74,11 +74,16 @@ the following line to your vimrc:
 
     let g:VimMailDontUseComplete=1
 
+By default, the contact completion appends the query to the result list, you
+can disable this feature:
+
+    let g:VimMailDoNotAppendQueryToResults
+
 ### Redaction
 
 +   **Easy spelllang switch**
 
-    While writting mails, I often need to do switch the spell lang which can be
+    While writing mails, I often need to do switch the spell lang which can be
     annoying, so this plugin provide an easy way to do it. Just type:
 
         <LocalLeader>l
@@ -101,7 +106,7 @@ the following line to your vimrc:
 
     If you use the edit_headers option from mutt (which I recommend), you have
     to put your cursor manually at the end of the headers before writing your
-    mail. This script will automatically put your cursor at the first empy
+    mail. This script will automatically put your cursor at the first empty
     line of the file.
 
     If you don't like that add the following to your vimrc:

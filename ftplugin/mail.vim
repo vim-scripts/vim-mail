@@ -5,40 +5,36 @@
 " Website:     http://github.com/dbeniamine/vim-mail.vim
 " Version:     0.2.2
 
-"Don't load twice
+" Don't load twice {{{1
 if exists("g:loaded_VimMail")
     finish
 endif
 let g:loaded_VimMail=1
-" Save context
+
+" Save context {{{1
 let s:save_cpo = &cpo
 set cpo&vim
 
-"
-" Configuration
-"
+" Configuration {{{1
 
-" Go at the end of the headers
+" Go at the end of the headers {{{2
 if(!exists("g:VimMailStartOnTop"))
     au BufWinEnter *mutt-* call VimMailGoto('^$','I')
 endif
 
-" Set fold method
+" Set fold method {{{2
 if(!exists("g:VimMailDoNotFold"))
     setlocal foldexpr=VimMaiFoldLevel() foldmethod=expr
 endif
 
+" Mappings {{{1
 
-"
-" Mappings
-"
-
-" Start mutt in RO mode
+" Start mutt in RO mode {{{2
 if !hasmapto("<LocalLeader>M","n")
     map <LocalLeader>M  :call VimMailStartClientRO() <CR>
 endif
 
-" Go to different parts of the mail
+" Go to different parts of the mail {{{2
 if !hasmapto("<LocalLeader>f","n")
     map <LocalLeader>f :call VimMailGoto('^From','A') <CR>
 endif
@@ -92,10 +88,10 @@ if !hasmapto("<LocalLeader>E", "n")
 endif
 
 
-" pc_query completion
+" pc_query completion {{{2
 if(!exists("g:VimMailDontUseComplete"))
     if !hasmapto("<LocalLeader>a","i")
-        imap <localLeader>a <C-X><C-U>
+        imap <localLeader>a <C-X><C-O>
     endif
     if(!exists("g:VimMailContactSyncCmd"))
         let g:VimMailContactSyncCmd="pycardsyncer"
@@ -107,15 +103,13 @@ if(!exists("g:VimMailDontUseComplete"))
         nmap <localLeader>a :execute ":! ".g:VimMailContactSyncCmd<CR>
     endif
     " Contact completion
-    set completefunc=CompleteAddr
+    set omnifunc=CompleteAddr
 endif
 
 
-"
-" Functions
-"
+" Functions {{{1
 
-" Start the mail client in RO mode
+" Start the mail client in RO mode {{{2
 function! VimMailStartClientRO()
     if (!exists("g:VimMailClient"))
         let g:VimMailClient="xterm -e  \"mutt -R\""
@@ -123,11 +117,11 @@ function! VimMailStartClientRO()
     execute ":! ".g:VimMailClient
 endfunction
 
-" Complete function using
+" Complete function {{{2
 " If we are on a header field provides only mail information
 " Else provides each fields contains in the matched vcards
 function! CompleteAddr(findstart, base)
-    if(a:findstart)
+    if(a:findstart) "first call {{{3
         let line=getline('.')
         " Are we in a header field ?
         if line=~ '^\(From\|To\|Cc\|Bcc\|Reply-To\):'
@@ -141,21 +135,20 @@ function! CompleteAddr(findstart, base)
             let start -= 1
         endwhile
         return start
-    else
-        " Set the grep function
+    else "Find complete {{{3
+        " Set the grep function {{{4
         if (g:VimMailCompleteOnlyMail)
             let l:grep="egrep \"(Name|MAIL)\""
         else
             let l:grep="grep :"
         endif
         let l:records=[]
-        " Do the query
+        " Do the query {{{4
         let l:query=system(g:VimMailContactQueryCmd." ".a:base."|".l:grep)
         for line in split(l:query, '\n')
-            "Recover the name
-            if line=~ "Name"
+            if line=~ "Name" "Recover the name {{{5
                 let l:name=substitute(split(line, ':')[1],"^[ ]*","","")
-            else
+            else " parse the answer {{{5
                 " pc_query answer look like this
                 " EMAIL (WORK): foo@bar.com
                 let ans=split(line,':')
@@ -181,18 +174,26 @@ function! CompleteAddr(findstart, base)
                 call add(records, item)
             endif
         endfor
+        if(! exists("g:VimMailDoNotAppendQueryToResults"))
+            " Append the query to the records
+            let l:item={}
+            let l:item.word=a:base
+            let l:item.kind='Q'
+            let l:item.info="query: ".a:base
+            call add(records, item)
+        endif
         return records
     endif
 endfunction
 
-" Go to a part of the message
+" Go to a part of the message {{{2
 function! VimMailGoto(pattern,post)
     normal gg
     execute "/".a:pattern
     execute "normal ".a:post
 endfunction;
 
-" Fold Method
+" Fold Method {{{2
 function! VimMaiFoldLevel()
     let l:line = matchstr(getline(v:lnum),'^>[> ]*')
     if !empty(l:line)
@@ -202,5 +203,5 @@ function! VimMaiFoldLevel()
     endif
 endfunction
 
-" Restore context
+" Restore context {{{1
 let &cpo = s:save_cpo
