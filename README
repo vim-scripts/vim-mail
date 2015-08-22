@@ -1,8 +1,11 @@
 This is a mirror of http://www.vim.org/scripts/script.php?script_id=5132
 
+# What is this plugin ?
+
 This plugin is a small helper for writing mail from vim, I designed it using
 mutt but it should work with other clients. I recommend to use it in
 combination with [CheckAttach](https://github.com/chrisbra/CheckAttach).
+
 
 # Features
 
@@ -142,11 +145,11 @@ mail using the following commands:
 
     Go to the first line (after headers):
 
-    <LocalLeader>B
+        <LocalLeader>B
 
     Go to the first line after the conversation:
 
-    <LocalLeader>E
+        <LocalLeader>E
 
     Go to the first message of the conversation:
 
@@ -183,5 +186,5 @@ adding to your vimrc something like:
     let g:VimMailClient="/path/to/your/launcher"
 
 
-More infos on github https://github.com/dbeniamine/vim-mail
+
 

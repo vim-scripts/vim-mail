@@ -12,7 +12,7 @@ combination with [CheckAttach](https://github.com/chrisbra/CheckAttach).
 ### Quick install
 
     git clone https://github.com/dbeniamine/vim-mail.git
-    cd todo.txt-vim
+    cd vim-mail/
     cp -r ./* ~/.vim
 
 ### Pathogen install
@@ -157,11 +157,11 @@ mail using the following commands:
 
     Go to the first line (after headers):
 
-    <LocalLeader>B
+        <LocalLeader>B
 
     Go to the first line after the conversation:
 
-    <LocalLeader>E
+        <LocalLeader>E
 
     Go to the first message of the conversation:
 
